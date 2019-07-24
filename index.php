@@ -1,248 +1,79 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <style>
-        input[type = number] {
-            width: 300px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            padding: 12px 10px 12px 10px;
-        }
+<?php
+function convert_1_digits($number)
+{
+    $one_digits = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+    return $one_digits[$number];
+}
 
-        #read {
-            border-radius: 2px;
-            padding: 10px 32px;
-            font-size: 16px;
-        }
-    </style>
+function convert_2_digits($number)
+{
+    $small_20s = [10 => 'ten', 11 => 'eleven', 12 => 'twelve', 13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen', 16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen', 19 => 'nineteen'];
+    $teens = [2 => 'twenty', 3 => 'thirty', 4 => 'forty', 5 => 'fifty', 6 => 'sixty', 7 => 'seventy', 8 => 'eighty', 9 => 'ninety'];
+
+    if ($number < 20) {
+        return $small_20s[$number];
+    }
+    if ($number[1] == 0) {
+        return $teens[$number[0]];
+    }
+    return $teens[$number[0]]." ".convert_1_digits($number[1]);
+}
+
+function convert_3_digits($number){
+    if ($number % 100 == 0){
+        return convert_1_digits($number[0]).' '.'hundred';
+    }
+    if ($number[1] == 0){
+        return convert_1_digits($number[0]).' '.'hundred and'.' '.convert_1_digits($number[2]);
+    }
+    return convert_1_digits($number[0]).' '.'hundred and'.' '.convert_2_digits(substr($number,1,2));
+}
+
+function convert_to_word($number){
+    switch (strlen($number)){
+        case 1:
+            $words = convert_1_digits($number);
+            break;
+        case 2:
+            $words = convert_2_digits($number);
+            break;
+        case 3:
+            $words = convert_3_digits($number);
+            break;
+        default:
+            $words = 'out of ability';
+            break;
+    }
+    return $words;
+}
+
+?>
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
+
 <body>
-<h2>Read Number</h2>
+
 <form method="post">
-    <input type="number" name="number" placeholder="Enter number" value="">
-    <input type="submit" id="read" value="Read">
+    <h2>Doc so thanh chu</h2>
+    <label>Nhap so can doc: </label>
+    <input type="number" name="number"/>
+    <br>
+    <button type="submit">Submit</button>
 </form>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $number = $_POST['number'];
-
-    function unitNumber($number)
-    {
-        if ($number >= 0 && $number <= 12) {
-            switch ($number) {
-                case null:
-                    break;
-                case 0: ?>
-                    <span>zero</span>
-                    <?php
-                    break;
-                case 1: ?>
-                    <span>one</span>
-                    <?php
-                    break;
-                case 2: ?>
-                    <span>two</span>
-                    <?php
-                    break;
-                case 3: ?>
-                    <span>three</span>
-                    <?php
-                    break;
-                case 4: ?>
-                    <span>four</span>
-                    <?php
-                    break;
-                case 5: ?>
-                    <span>five</span>
-                    <?php
-                    break;
-                case 6:
-                    ?>
-                    <span>six</span>
-                    <?php
-                    break;
-                case 7:
-                    ?>
-                    <span>seven</span>
-                    <?php
-                    break;
-                case 8:
-                    ?>
-                    <span>eight</span>
-                    <?php
-                    break;
-                case 9:
-                    ?>
-                    <span>nine</span>
-                    <?php
-                    break;
-                case 10:
-                    ?>
-                    <div>ten</div>
-                    <?php
-                    break;
-                case 11:
-                    ?>
-                    <div>eleven</div>
-                    <?php
-                    break;
-                case 12:
-                    ?>
-                    <div>twelve</div>
-                    <?php
-                    break;
-            }
-        }
-    }
-
-    if ($number >= 13 && $number <= 19) {
-        $num = $number - 10;
-        switch ($num) {
-            case 3:
-                ?>
-                <span>thirteen</span>
-                <?php
-                break;
-            case 4:
-                ?>
-                <span>fourteen</span>
-                <?php
-                break;
-            case 5:
-                ?>
-                <span>fifteen</span>
-                <?php
-                break;
-            case 6:
-                ?>
-                <span>sixteen</span>
-                <?php
-                break;
-            case 7:
-                ?>
-                <span>seventeen</span>
-                <?php
-                break;
-            case 8:
-                ?>
-                <span>eighteen</span>
-                <?php
-                break;
-            case 9:
-                ?>
-                <span>nineteen</span>
-                <?php
-                break;
-        }
-    }
-
-    function twoNumber($number)
-    {
-        if ($number >= 20) {
-            $num = $number % 10;
-            switch ($number - $num) {
-                case 20:
-                    ?>
-                    <span>twenty</span>
-                    <?php
-                    break;
-                case 30:
-                    ?>
-                    <span>thirty</span>
-                    <?php
-                    break;
-                case 40:
-                    ?>
-                    <span>fourty</span>
-                    <?php
-                    break;
-                case 50:
-                    ?>
-                    <span>fifty</span>
-                    <?php
-                    break;
-                case 60:
-                    ?>
-                    <span>sixty</span>
-                    <?php
-                    break;
-                case 70:
-                    ?>
-                    <span>seventy</span>
-                    <?php
-                    break;
-                case 80:
-                    ?>
-                    <span>eighty</span>
-                    <?php
-                    break;
-                case 90:
-                    ?>
-                    <span>ninety</span>
-                    <?php
-                    break;
-            }
-            unitNumber($num);
-        }
-    }
-
-        if ($number >= 100) {
-            $twoNumber = $number % 100;
-            switch (floor($number - $twoNumber)) {
-                case 100:
-                    ?>
-                    <span>one hundred</span>
-                    <?php
-                    break;
-                case 200:
-                    ?>
-                    <span>two hundred</span>
-                    <?php
-                    break;
-                case 300:
-                    ?>
-                    <span>three hundred</span>
-                    <?php
-                    break;
-                case 400:
-                    ?>
-                    <span>four hundred</span>
-                    <?php
-                    break;
-                case 500:
-                    ?>
-                    <span>five hundred</span>
-                    <?php
-                    break;
-                case 600:
-                    ?>
-                    <span>six hundred</span>
-                    <?php
-                    break;
-                case 700:
-                    ?>
-                    <span>seven hundred</span>
-                    <?php
-                    break;
-                case 800:
-                    ?>
-                    <span>eight hundred</span>
-                    <?php
-                    break;
-                case 900:
-                    ?>
-                    <span>nine hundred</span>
-                    <?php
-                    break;
-            }
-            twoNumber($twoNumber);
-        }
-
-//    unitNumber($number);
-    twoNumber($number);
-
+    $number = $_POST["number"];
+    echo convert_to_word($number);
 }
 ?>
 </body>
