@@ -1,80 +1,86 @@
 <?php
-function convert_1_digits($number)
+function convert_1_digits($n)
 {
-    $one_digits = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-    return $one_digits[$number];
+    $array = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+    return $array[$n];
 }
 
-function convert_2_digits($number)
+function convert_2_digits($n)
 {
-    $small_20s = [10 => 'ten', 11 => 'eleven', 12 => 'twelve', 13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen', 16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen', 19 => 'nineteen'];
+    $small20 = [11 => 'eleven', 12 => 'twelve', 13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen', 16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen', 19 => 'nineteen'];
+    if ($n > 10 && $n < 20) {
+
+        return $small20[$n];
+    };
+
     $teens = [2 => 'twenty', 3 => 'thirty', 4 => 'forty', 5 => 'fifty', 6 => 'sixty', 7 => 'seventy', 8 => 'eighty', 9 => 'ninety'];
+    if ($n[1] == 0) {
+        return $teens[$n[0]];
+    }
 
-    if ($number < 20) {
-        return $small_20s[$number];
-    }
-    if ($number[1] == 0) {
-        return $teens[$number[0]];
-    }
-    return $teens[$number[0]]." ".convert_1_digits($number[1]);
+    return $teens[$n[0]] . ' ' . convert_1_digits($n[1]);
 }
 
-function convert_3_digits($number){
-    if ($number % 100 == 0){
-        return convert_1_digits($number[0]).' '.'hundred';
+function convert_3_digits($n)
+{
+    if ($n % 100 == 0) {
+        return convert_1_digits($n[0]) . ' hundred';
     }
-    if ($number[1] == 0){
-        return convert_1_digits($number[0]).' '.'hundred and'.' '.convert_1_digits($number[2]);
+
+    if ($n[1] == 0) {
+        return convert_1_digits($n[0]) . ' hundred and ' . convert_1_digits($n[2]);
     }
-    return convert_1_digits($number[0]).' '.'hundred and'.' '.convert_2_digits(substr($number,1,2));
+    return convert_1_digits($n[0]) . ' hundred and ' . convert_2_digits(substr($n, 1));
 }
 
-function convert_to_word($number){
-    switch (strlen($number)){
+function convert_to_word($n)
+{
+    switch (strlen($n)) {
         case 1:
-            $words = convert_1_digits($number);
+            $word = convert_1_digits($n);
             break;
         case 2:
-            $words = convert_2_digits($number);
+            $word = convert_2_digits($n);
             break;
         case 3:
-            $words = convert_3_digits($number);
+            $word = convert_3_digits($n);
             break;
         default:
-            $words = 'out of ability';
-            break;
+            $word = 'out of ability';
     }
-    return $words;
+    return $word;
 }
 
 ?>
 
-
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Read Number</title>
+
 </head>
-
 <body>
+<div id="content">
+    <form method="post">
 
-<form method="post">
-    <h2>Doc so thanh chu</h2>
-    <label>Nhap so can doc: </label>
-    <input type="number" name="number"/>
-    <br>
-    <button type="submit">Submit</button>
-</form>
+        <h3>Enter your number: </h3>
+        <label>
+            <input type="number" name="number"/>
+        </label>
+        <button type="submit">Read</button>
+        <br><br>
 
-<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $number = $_POST["number"];
-    echo convert_to_word($number);
-}
-?>
+        <?php
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $number = $_POST["number"];
+
+            echo convert_to_word($number);
+        }
+
+        ?>
+    </form>
+
+</div>
 </body>
 </html>
